@@ -1,0 +1,121 @@
+/* Space Grotesk (licença OFL, fonts/OFL.txt); sem o arquivo vale a fonte do sistema. */
+@font-face{font-family:'Space Grotesk';src:local('Space Grotesk'),url('fonts/SpaceGrotesk.woff2') format('woff2');font-weight:300 700;font-display:swap}
+
+:root{
+  --bg:#0d0e12; --card:#15171d; --line:#252833; --fg:#e4e6ec; --dim:#a5aab8; --faint:#7c8291; --ac:#8b95f0;
+  --sans:'Space Grotesk',system-ui,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.5;-webkit-text-size-adjust:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+
+.skip{position:absolute;left:12px;top:-60px;background:var(--ac);color:#0d0e12;padding:8px 14px;border-radius:8px;font-size:14px;z-index:20;text-decoration:none}
+.skip:focus{top:12px}
+
+nav.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 36px;max-width:1240px;margin:0 auto}
+nav.top .n{font-weight:700;font-size:15px;text-decoration:none}
+nav.top .links{display:flex;gap:26px;font-size:13.5px}
+nav.top .links a{color:var(--dim);text-decoration:none}
+nav.top .links a:hover{color:var(--fg)}
+nav.top .gh{border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:13px;text-decoration:none}
+nav.top .gh:hover{border-color:var(--faint)}
+
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);font-weight:500}
+h1.h{font-size:clamp(34px,5vw,56px);line-height:1.05;margin:14px 0 18px;font-weight:700;letter-spacing:-.02em;max-width:760px}
+h1.h .ac{color:var(--ac)}
+p.sub{color:var(--dim);font-size:16px;line-height:1.65;margin:0 auto 26px;max-width:520px}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn{border-radius:999px;padding:11px 22px;font-size:14px;font-weight:500;border:1px solid var(--line);color:var(--fg);text-decoration:none;display:inline-block;transition:border-color .25s}
+.btn:hover{border-color:var(--faint)}
+.btn.p{background:var(--ac);color:#0d0e12;border-color:var(--ac)}
+.btn.p:hover{border-color:var(--fg)}
+
+.hero{text-align:center;padding:44px 36px 64px;min-height:470px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+.sec{padding:56px 36px 40px 140px;max-width:1080px;margin:0 auto}
+.sec h2.t{font-size:32px;margin:0 0 6px;text-align:center;letter-spacing:-.01em}
+.sec p.t{color:var(--faint);text-align:center;margin:0 0 54px;font-size:15px}
+
+footer{max-width:1080px;margin:0 auto;padding:40px 36px 56px;color:var(--faint);font-size:12.5px;text-align:center}
+
+/* projetos em zigue-zague */
+.grid{display:grid;grid-template-columns:1fr;column-gap:56px;row-gap:56px;padding-bottom:40px}
+@media (min-width:821px){
+  .grid{grid-template-columns:1fr 1fr;padding-bottom:110px}
+  .cell:nth-child(even){transform:translateY(96px)}
+}
+.poster{display:block;position:relative;aspect-ratio:16/10;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(135deg,#1a1d2b,#12141a);text-decoration:none;color:inherit;transition:transform .35s,border-color .35s}
+a.poster:hover,a.poster:focus-visible{transform:translateY(-4px);border-color:var(--ac)}
+.poster svg{width:100%;height:100%;display:block}
+.poster .ov{position:absolute;right:12px;bottom:12px;background:rgba(13,14,18,.85);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font:11.5px var(--mono);color:var(--fg);opacity:0;transition:opacity .3s}
+a.poster:hover .ov,a.poster:focus-visible .ov{opacity:1}
+.chip{position:absolute;left:12px;top:12px;background:rgba(13,14,18,.8);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font:11px var(--mono);color:var(--dim)}
+.poster .ill{position:absolute;right:12px;top:12px;font:10px var(--mono);color:var(--faint)}
+.card h3{font-size:20px;margin:16px 0 4px}
+.card .st{color:var(--dim);font-size:14.5px;margin:0 0 12px}
+.card ul{list-style:none;padding:0;margin:0;display:grid;gap:8px;color:var(--dim);font-size:14px;line-height:1.5}
+.card li{display:grid;grid-template-columns:18px 1fr}
+.card li::before{content:"\2713";color:var(--ac)}
+.card .fn{margin:10px 0 0;font-size:12px;color:var(--faint);line-height:1.5}
+.card .fn a{color:var(--dim)}
+
+/* sobre e links */
+#sobre{padding-top:0}
+.about{display:grid;grid-template-columns:1fr;gap:40px;align-items:center;padding-top:30px}
+.about.com-foto{grid-template-columns:1.3fr 1fr}
+.about h2{font-size:30px;margin:0 0 6px;letter-spacing:-.01em}
+.about .tag{color:var(--dim);font-size:17px;margin:0 0 18px}
+.about p{color:var(--dim);font-size:15px;line-height:1.7;margin:0 0 14px}
+.about p.tag{font-size:17px;margin:0 0 18px}
+.photo{aspect-ratio:1/1.1;border-radius:16px;border:1px solid var(--line);overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.contact h2{font-size:22px;margin:0}
+.contact .row{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 16px}
+.contact small{color:var(--faint);font-size:12px}
+
+/* aparecer suave: só com JS */
+.js .card{opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}
+.js .card.in{opacity:1;transform:none}
+
+/* trilho: só depois do hero, só em tela larga */
+.rail{position:fixed;left:34px;top:96px;width:130px;z-index:5;opacity:0;visibility:hidden;transform:translateX(-10px);pointer-events:none;transition:opacity .45s,transform .45s,visibility 0s linear .45s}
+.rail.show{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition-delay:0s}
+.rl{position:absolute;left:5px;top:5.5px;width:1px;background:var(--line)}
+.rf{position:absolute;left:5px;top:5.5px;height:0;width:1px;background:var(--ac)}
+.tip{position:absolute;left:0;top:0;width:11px;height:11px;border-radius:50%;background:var(--ac);box-shadow:0 0 12px var(--ac)}
+.rn{position:absolute;left:0;display:flex;align-items:center;gap:10px;font:11px var(--mono);color:var(--faint);white-space:nowrap;text-decoration:none}
+.rn i{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--line);background:var(--bg);display:block;transition:border-color .3s,background .3s;position:relative;z-index:1}
+.rn.pass i{border-color:var(--ac);background:var(--ac)}
+.rn .nm{display:inline-block;max-width:0;overflow:hidden;transition:max-width .35s;color:var(--fg);font-family:var(--sans);font-size:12.5px}
+.rn.cur .nm,.rn:focus-visible .nm{max-width:150px}
+
+/* abaixo de 1160 px o nome do ponto do trilho passaria por cima dos cartões */
+@media (max-width:1159px){
+  .rail{display:none}
+  .sec{padding-left:36px}
+}
+@media (max-width:820px){
+  nav.top .links{display:none}
+  .rail{display:none}
+  .sec{padding-left:36px}
+  .about.com-foto{grid-template-columns:1fr}
+}
+@media (max-width:480px){
+  nav.top{padding:14px 20px}
+  .hero{padding:32px 20px 48px;min-height:0}
+  .sec{padding:44px 20px 32px}
+  footer{padding:32px 20px 44px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important;animation:none!important}
+  .js .card{opacity:1!important;transform:none!important}
+  a.poster:hover,a.poster:focus-visible{transform:none}
+  .tip{box-shadow:none}
+}
+@media print{
+  .js .card{opacity:1!important;transform:none!important;transition:none!important}
+  .rail{display:none}
+}

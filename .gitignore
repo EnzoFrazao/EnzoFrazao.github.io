@@ -1,0 +1,6 @@
+# Fora do repositório público: memória técnica e instruções de agente
+specs/
+AGENTS.md
+CLAUDE.md
+.claude/
+.superpowers/
