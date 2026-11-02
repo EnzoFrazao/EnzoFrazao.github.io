@@ -18,7 +18,7 @@ Projetos com código público têm link direto:
 
 | Projeto | O que é | Código |
 |---|---|---|
-| Analista de pedidos com IA | Agente que responde perguntas sobre pedidos, em português, com painel no ar e vídeo | [analista-pedidos-ia](https://github.com/EnzoFrazao/analista-pedidos-ia) |
+| Analista de pedidos com IA | Agente que chama ferramentas para consultar o esquema e executar SQL de leitura; mostra a consulta e a resposta, com painel no ar e vídeo | [analista-pedidos-ia](https://github.com/EnzoFrazao/analista-pedidos-ia) |
 | Triagem de e-mails com LLM | Workflow n8n que classifica e roteia e-mails de atendimento | [triagem-emails-n8n-ia](https://github.com/EnzoFrazao/triagem-emails-n8n-ia) |
 | GUARÁ · KaizenDO Vale | Protótipo de localização de equipes num pátio ferroviário | [KaizenDo](https://github.com/EnzoFrazao/KaizenDo) |
 
@@ -60,7 +60,7 @@ Depois acesse `http://localhost:8000`.
 
 ## Como é conferida
 
-A cada versão, scripts que ficam fora deste repositório conferem regras de conteúdo (nenhum telefone, números só dos
+Scripts que ficam fora deste repositório conferem regras de conteúdo (nenhum telefone, números só dos
 projetos medidos, contraste, nenhum recurso externo, peso total) e, num Chrome sem interface, o layout de 320 a 1280 px,
 a página sem JavaScript, o movimento reduzido, o teclado e a animação ao descer, subir e descer de novo.
 
