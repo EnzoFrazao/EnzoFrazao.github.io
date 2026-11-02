@@ -60,6 +60,13 @@ footer{max-width:1080px;margin:0 auto;padding:40px 36px 56px;color:var(--faint);
   .cell:nth-child(even){margin-top:72px}
 }
 
+/* com JS (site.js põe .mas e a linha de cada cartão): colunas independentes em linhas de 1 px; a da direita começa 72 px mais baixo */
+@media (min-width:821px){
+  .grid.mas{grid-auto-rows:1px;row-gap:0;margin-bottom:-48px}
+  .grid.mas .cell:nth-child(odd){grid-column:1}
+  .grid.mas .cell:nth-child(even){grid-column:2;margin-top:0}
+}
+
 /* cores de cada projeto: tiradas do próprio projeto (ver specs/system.md) */
 .cell[data-cartao="analista"]{--c1:#fbbf24;--c2:#60a5fa;--b1:#16254a;--b2:#0d1426}
 .cell[data-cartao="triagem"]{--c1:#ff6d5a;--c2:#ffb4a8;--b1:#2e1a1c;--b2:#170f11}

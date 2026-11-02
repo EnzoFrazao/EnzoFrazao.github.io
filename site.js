@@ -28,15 +28,63 @@ function estadoDoCartao(razao, cruza, atual) {
   return atual;
 }
 
-if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisivel, estadoDoCartao };
+// Linhas de 1 px que um cartão ocupa na grade em colunas independentes: altura arredondada para cima mais o espaço até o próximo.
+function linhasDoCartao(altura, espaco) {
+  return Math.ceil(Math.max(0, altura)) + espaco;
+}
 
-// Comportamento no navegador: aparecer suave dos cartões e trilho de rolagem.
+// Linha inicial e número de linhas de cada cartão em duas colunas (índices pares à esquerda, ímpares à direita);
+// a coluna da direita começa `desnivel` px mais baixo. Cada coluna empilha sem vão.
+function posicoesDosCartoes(alturas, espaco, desnivel) {
+  var fim = [1, 1 + desnivel];
+  return alturas.map(function (altura, k) {
+    var coluna = k % 2;
+    var linhas = linhasDoCartao(altura, espaco);
+    var linha = fim[coluna];
+    fim[coluna] = linha + linhas;
+    return { linha: linha, linhas: linhas };
+  });
+}
+
+if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisivel, estadoDoCartao, linhasDoCartao, posicoesDosCartoes };
+
+// Comportamento no navegador: colunas dos projetos, aparecer suave dos cartões e trilho de rolagem.
 (function () {
   if (typeof document === 'undefined') return;
 
   var raiz = document.documentElement;
   var GAP = 44;
+  var ESPACO_CARTOES = 48;
   var MOVIMENTO_REDUZIDO = '(prefers-reduced-motion: reduce)';
+
+  // Colunas independentes (zigue-zague sem vãos): com duas colunas, cada cartão ocupa tantas linhas de 1 px quanto a sua
+  // altura, e a coluna da direita começa 72 px mais baixo. Sem JS ou abaixo de 821 px vale a grade comum do CSS.
+  try {
+    var grade = document.querySelector('.grid');
+    var celulas = grade ? [].slice.call(grade.querySelectorAll('.cell')) : [];
+    if (grade && celulas.length) {
+      var duasColunas = window.matchMedia('(min-width: 821px)');
+      var ajustar = function () {
+        var ativo = duasColunas.matches;
+        grade.classList.toggle('mas', ativo);
+        var pos = ativo ? posicoesDosCartoes(celulas.map(function (c) { return c.offsetHeight; }), ESPACO_CARTOES, 72) : [];
+        celulas.forEach(function (c, k) {
+          c.style.gridRowStart = ativo ? String(pos[k].linha) : '';
+          c.style.gridRowEnd = ativo ? 'span ' + pos[k].linhas : '';
+        });
+      };
+      ajustar();
+      if ('ResizeObserver' in window) {
+        var ro = new ResizeObserver(function () { ajustar(); });
+        celulas.forEach(function (c) { ro.observe(c); });
+      }
+      window.addEventListener('resize', ajustar);
+      window.addEventListener('load', ajustar);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustar);
+    }
+  } catch (erro) {
+    if (grade) grade.classList.remove('mas');
+  }
 
   // Aparecer suave. Sem IntersectionObserver, tudo aparece de uma vez.
   // Se algo aqui falhar, desfaz a classe js: o conteúdo vale mais que a animação.
@@ -61,9 +109,11 @@ if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisi
   }
 
   // Trilho: um ponto por [data-sec] (cartões, Sobre e Links).
+  // Em ordem de posição na página: com as duas colunas independentes, a ordem do HTML não é a de cima para baixo.
   var secoes = [].slice.call(document.querySelectorAll('[data-sec]'));
   var hero = document.getElementById('hero');
   if (secoes.length === 0 || !hero) return;
+  secoes.sort(function (a, b) { return centro(a) - centro(b); });
 
   var trilho = document.createElement('nav');
   trilho.className = 'rail';
