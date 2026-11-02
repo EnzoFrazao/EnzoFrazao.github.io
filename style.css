@@ -2,8 +2,8 @@
 @font-face{font-family:'Space Grotesk';src:local('Space Grotesk'),url('fonts/SpaceGrotesk.woff2') format('woff2');font-weight:300 700;font-display:swap}
 
 :root{
-  --bg:#0d0e12; --card:#15171d; --line:#252833; --fg:#e4e6ec; --dim:#a5aab8; --faint:#7c8291; --ac:#8b95f0;
-  --surf:#12141b; --tint:#14162a; --nav-h:72px;
+  --bg:#0d0e12; --card:#15171d; --line:#252833; --fg:#e4e6ec; --dim:#a5aab8; --faint:#8a90a0; --ac:#8b95f0;
+  --proj:#10121a; --surf:#181b27; --tint:#1c2040; --filete:rgba(139,149,240,.45); --nav-h:72px;
   --sans:'Space Grotesk',system-ui,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
@@ -38,8 +38,9 @@ p.sub{color:var(--dim);font-size:16px;line-height:1.65;margin:0 auto 26px;max-wi
 
 /* faixas de fundo: cada seção tem o seu */
 .band{width:100%}
-.b-sobre{background:var(--surf);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.b-contato{background:var(--tint)}
+.b-proj{background:var(--proj)}
+.b-sobre{background:var(--surf);border-top:1px solid var(--filete)}
+.b-contato{background:var(--tint);border-top:1px solid var(--filete)}
 .sn{font:500 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ac);margin:0 0 12px}
 
 .sec{padding:56px 36px 40px 140px;max-width:1080px;margin:0 auto}
@@ -128,9 +129,21 @@ dl.stack dd{margin:0;color:var(--dim);font-size:14.5px;line-height:1.55}
 .contact .row{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 18px}
 .contact small{color:var(--faint);font-size:12px}
 
-/* aparecer suave: só com JS */
-.js .card{opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}
-.js .card.in{opacity:1;transform:none}
+/* aparecer suave: só com JS; sai ao deixar a tela e anima de novo na volta */
+.js .card,.js .rv{opacity:0;transform:translateY(28px);transition:opacity .6s,transform .6s}
+.js .card.in,.js .rv.in{opacity:1;transform:none;transition-delay:var(--d,0s)}
+@media (min-width:821px){
+  .cell:nth-child(even) .card{--d:.12s}
+}
+
+/* entrada do hero: só CSS, em cascata */
+@keyframes subir{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.hero>*{animation:subir .7s cubic-bezier(.2,.7,.2,1) both}
+.hero>:nth-child(2){animation-delay:.08s}
+.hero>:nth-child(3){animation-delay:.16s}
+.hero>:nth-child(4){animation-delay:.24s}
+.hero>:nth-child(5){animation-delay:.32s}
+p.dif{color:var(--ac);font-size:13.5px;margin:20px 0 0}
 
 /* trilho: só depois do hero, só em tela larga */
 .rail{position:fixed;left:34px;top:96px;width:130px;z-index:5;opacity:0;visibility:hidden;transform:translateX(-10px);pointer-events:none;transition:opacity .45s,transform .45s,visibility 0s linear .45s}
@@ -167,11 +180,12 @@ dl.stack dd{margin:0;color:var(--dim);font-size:14.5px;line-height:1.55}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{transition:none!important;animation:none!important}
-  .js .card{opacity:1!important;transform:none!important}
+  .js .card,.js .rv{opacity:1!important;transform:none!important}
   a.poster:hover,a.poster:focus-visible{transform:none}
   .tip{box-shadow:none}
 }
 @media print{
-  .js .card{opacity:1!important;transform:none!important;transition:none!important}
+  .js .card,.js .rv{opacity:1!important;transform:none!important;transition:none!important}
+  .hero>*{animation:none}
   .rail{display:none}
 }

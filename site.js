@@ -21,7 +21,14 @@ function trilhoVisivel(rolagem, fimDoHero) {
   return rolagem + 120 >= fimDoHero - 140;
 }
 
-if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisivel };
+// Decide se o cartão está "dentro": entra com 12% visível e só sai quando some por completo (evita piscar na borda).
+function estadoDoCartao(razao, cruza, atual) {
+  if (razao >= 0.12) return true;
+  if (!cruza) return false;
+  return atual;
+}
+
+if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisivel, estadoDoCartao };
 
 // Comportamento no navegador: aparecer suave dos cartões e trilho de rolagem.
 (function () {
@@ -34,16 +41,15 @@ if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisi
   // Aparecer suave. Sem IntersectionObserver, tudo aparece de uma vez.
   // Se algo aqui falhar, desfaz a classe js: o conteúdo vale mais que a animação.
   try {
-    var cartoes = [].slice.call(document.querySelectorAll('.card'));
+    var cartoes = [].slice.call(document.querySelectorAll('.card, .rv'));
     if ('IntersectionObserver' in window) {
+      // Sem unobserve: ao sair da tela o cartão volta ao estado inicial e anima de novo na próxima entrada.
       var io = new IntersectionObserver(function (entradas) {
         entradas.forEach(function (e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            io.unobserve(e.target);
-          }
+          var dentro = estadoDoCartao(e.intersectionRatio, e.isIntersecting, e.target.classList.contains('in'));
+          e.target.classList.toggle('in', dentro);
         });
-      }, { threshold: 0.12 });
+      }, { threshold: [0, 0.12] });
       cartoes.forEach(function (c) { io.observe(c); });
     } else {
       cartoes.forEach(function (c) { c.classList.add('in'); });
