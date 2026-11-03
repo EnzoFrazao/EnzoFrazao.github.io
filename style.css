@@ -43,7 +43,7 @@ p.sub{color:var(--dim);font-size:16px;line-height:1.65;margin:0 auto 26px;max-wi
 .b-contato{background:var(--tint);border-top:1px solid var(--filete)}
 .sn{font:500 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ac);margin:0 0 12px}
 
-.sec{padding:56px 36px 40px 140px;max-width:1080px;margin:0 auto}
+.sec{padding:56px 36px 40px;max-width:976px;margin:0 auto}
 #projetos{padding-top:80px;padding-bottom:80px}
 .b-sobre .sec{padding-top:80px;padding-bottom:80px}
 .b-contato .sec{padding-top:72px;padding-bottom:72px}
@@ -166,8 +166,8 @@ p.dif{color:var(--ac);font-size:13.5px;margin:20px 0 0}
 .rn .nm{display:inline-block;max-width:0;overflow:hidden;transition:max-width .35s;color:var(--fg);font-family:var(--sans);font-size:12.5px}
 .rn.cur .nm,.rn:focus-visible .nm{max-width:150px}
 
-/* abaixo de 1160 px o nome do ponto do trilho passaria por cima dos cartões */
-@media (max-width:1159px){
+/* abaixo de 1280 px o nome do ponto do trilho passaria por cima dos cartões */
+@media (max-width:1279px){
   .rail{display:none}
   .sec{padding-left:36px}
 }
