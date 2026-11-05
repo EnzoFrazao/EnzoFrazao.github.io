@@ -46,9 +46,17 @@ function posicoesDosCartoes(alturas, espaco, desnivel) {
   });
 }
 
-if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisivel, estadoDoCartao, linhasDoCartao, posicoesDosCartoes };
+// Página dos projetos depois de andar `passo` páginas a partir de `atual`; nunca sai de 1..total.
+function paginaAlvo(atual, passo, total) {
+  var ultima = Math.max(1, Math.floor(total) || 1);
+  var n = Math.floor(atual) + Math.floor(passo);
+  if (!(n >= 1)) return 1;
+  return Math.min(n, ultima);
+}
 
-// Comportamento no navegador: colunas dos projetos, aparecer suave dos cartões e trilho de rolagem.
+if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisivel, estadoDoCartao, linhasDoCartao, posicoesDosCartoes, paginaAlvo };
+
+// Comportamento no navegador: páginas dos projetos, colunas dos cartões, aparecer suave e trilho de rolagem.
 (function () {
   if (typeof document === 'undefined') return;
 
@@ -59,21 +67,25 @@ if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisi
 
   // Colunas independentes (zigue-zague sem vãos): com duas colunas, cada cartão ocupa tantas linhas de 1 px quanto a sua
   // altura, e a coluna da direita começa 72 px mais baixo. Sem JS ou abaixo de 821 px vale a grade comum do CSS.
+  // Cada página dos projetos é uma `.grid`; só a página à vista é medida (um cartão escondido mede 0).
+  var grades = [].slice.call(document.querySelectorAll('.grid'));
+  var ajustar = function () {};
   try {
-    var grade = document.querySelector('.grid');
-    var celulas = grade ? [].slice.call(grade.querySelectorAll('.cell')) : [];
-    if (grade && celulas.length) {
+    var celulas = [].slice.call(document.querySelectorAll('.grid .cell'));
+    if (grades.length && celulas.length) {
       var duasColunas = window.matchMedia('(min-width: 821px)');
-      var ajustar = function () {
-        var ativo = duasColunas.matches;
-        grade.classList.toggle('mas', ativo);
-        var pos = ativo ? posicoesDosCartoes(celulas.map(function (c) { return c.offsetHeight; }), ESPACO_CARTOES, 72) : [];
-        celulas.forEach(function (c, k) {
-          c.style.gridRowStart = ativo ? String(pos[k].linha) : '';
-          c.style.gridRowEnd = ativo ? 'span ' + pos[k].linhas : '';
+      ajustar = function () {
+        grades.forEach(function (grade) {
+          var usar = duasColunas.matches && !grade.hidden;
+          var dela = [].slice.call(grade.querySelectorAll('.cell'));
+          grade.classList.toggle('mas', usar);
+          var pos = usar ? posicoesDosCartoes(dela.map(function (c) { return c.offsetHeight; }), ESPACO_CARTOES, 72) : [];
+          dela.forEach(function (c, k) {
+            c.style.gridRowStart = usar ? String(pos[k].linha) : '';
+            c.style.gridRowEnd = usar ? 'span ' + pos[k].linhas : '';
+          });
         });
       };
-      ajustar();
       if ('ResizeObserver' in window) {
         var ro = new ResizeObserver(function () { ajustar(); });
         celulas.forEach(function (c) { ro.observe(c); });
@@ -83,7 +95,54 @@ if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisi
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustar);
     }
   } catch (erro) {
-    if (grade) grade.classList.remove('mas');
+    grades.forEach(function (g) { g.classList.remove('mas'); });
+    ajustar = function () {};
+  }
+
+  // Páginas dos projetos: botão anterior/próxima. Sem JS, ou se algo falhar aqui, todas as páginas ficam à vista.
+  var pager = document.querySelector('.pager');
+  var paginaAtual = 1;
+  var irParaAncora = null;
+  var mostrarPagina = function () {};
+  try {
+    if (pager && grades.length > 1) {
+      var botoes = [].slice.call(pager.querySelectorAll('.pg-b'));
+      var contador = pager.querySelector('.pg-n');
+      var dois = function (n) { return (n < 10 ? '0' : '') + n; };
+      mostrarPagina = function (n, rolar) {
+        paginaAtual = paginaAlvo(n, 0, grades.length);
+        grades.forEach(function (g, k) { g.hidden = k !== paginaAtual - 1; });
+        contador.innerHTML = '<b>' + dois(paginaAtual) + '</b> / ' + dois(grades.length);
+        botoes.forEach(function (b) {
+          var passo = Number(b.getAttribute('data-passo'));
+          b.setAttribute('aria-disabled', paginaAlvo(paginaAtual, passo, grades.length) === paginaAtual ? 'true' : 'false');
+        });
+        ajustar();
+        montarTrilho();
+        if (rolar && pager.getBoundingClientRect().top < 0) {
+          var titulo = document.querySelector('#projetos .sn');
+          window.scrollTo({
+            top: titulo.getBoundingClientRect().top + window.pageYOffset - 24,
+            behavior: window.matchMedia(MOVIMENTO_REDUZIDO).matches ? 'auto' : 'smooth'
+          });
+        }
+      };
+      botoes.forEach(function (b) {
+        b.addEventListener('click', function () {
+          mostrarPagina(paginaAtual + Number(b.getAttribute('data-passo')), true);
+        });
+      });
+      // Link direto para um cartão de outra página (#p-...): abre a página dele.
+      var ancora = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+      var daAncora = ancora ? grades.indexOf(ancora.closest('.grid')) : -1;
+      pager.hidden = false;
+      mostrarPagina(daAncora >= 0 ? daAncora + 1 : 1, false);
+      if (daAncora > 0) irParaAncora = ancora;
+    }
+  } catch (erro) {
+    grades.forEach(function (g) { g.hidden = false; });
+    if (pager) pager.hidden = true;
+    ajustar();
   }
 
   // Aparecer suave. Sem IntersectionObserver, tudo aparece de uma vez.
@@ -103,31 +162,23 @@ if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisi
       cartoes.forEach(function (c) { c.classList.add('in'); });
     }
     raiz.classList.add('js-ok');
+    ajustar(); // agora a página escolhida está à vista (a regra .js:not(.js-ok) deixa de esconder a segunda)
   } catch (erro) {
     raiz.classList.remove('js');
     return;
   }
 
-  // Trilho: um ponto por [data-sec] (cartões, Sobre e Links).
+  // Trilho: um ponto por [data-sec] à vista (cartões da página atual, Sobre e Contato).
   // Em ordem de posição na página: com as duas colunas independentes, a ordem do HTML não é a de cima para baixo.
-  var secoes = [].slice.call(document.querySelectorAll('[data-sec]'));
+  // É refeito a cada troca de página, porque os cartões da outra página não ocupam lugar.
   var hero = document.getElementById('hero');
-  if (secoes.length === 0 || !hero) return;
-  secoes.sort(function (a, b) { return centro(a) - centro(b); });
+  if (!hero) return;
 
-  var trilho = document.createElement('nav');
-  trilho.className = 'rail';
-  trilho.setAttribute('aria-label', 'Índice da página');
-  var linha = document.createElement('div');
-  linha.className = 'rl';
-  linha.style.height = (secoes.length - 1) * GAP + 'px';
-  var preenchida = document.createElement('div');
-  preenchida.className = 'rf';
-  var ponta = document.createElement('div');
-  ponta.className = 'tip';
-  trilho.appendChild(linha);
-  trilho.appendChild(preenchida);
-  trilho.appendChild(ponta);
+  var secoes = [];
+  var pontos = [];
+  var trilho = null;
+  var preenchida = null;
+  var ponta = null;
 
   function centro(el) {
     var r = el.getBoundingClientRect();
@@ -137,26 +188,54 @@ if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisi
     return centro(el) - window.innerHeight * 0.45;
   }
 
-  var pontos = secoes.map(function (s, k) {
-    var a = document.createElement('a');
-    a.className = 'rn';
-    a.href = '#' + s.id;
-    a.style.top = k * GAP + 'px';
-    a.innerHTML = '<i></i><span class="nm"></span>';
-    a.lastChild.textContent = s.getAttribute('data-sec');
-    a.addEventListener('click', function (ev) {
-      ev.preventDefault();
-      window.scrollTo({
-        top: alvoDaRolagem(s),
-        behavior: window.matchMedia(MOVIMENTO_REDUZIDO).matches ? 'auto' : 'smooth'
-      });
+  function montarTrilho() {
+    if (!hero) return; // ainda não chegou aqui: a primeira montagem é a do fim do script
+    var estavaVisivel = !!(trilho && trilho.classList.contains('show'));
+    if (trilho && trilho.parentNode) trilho.parentNode.removeChild(trilho);
+    trilho = null;
+    secoes = [].slice.call(document.querySelectorAll('[data-sec]')).filter(function (s) {
+      return !s.closest('.grid[hidden]');
     });
-    trilho.appendChild(a);
-    return a;
-  });
-  document.body.appendChild(trilho);
+    if (secoes.length === 0) return;
+    secoes.sort(function (a, b) { return centro(a) - centro(b); });
+
+    trilho = document.createElement('nav');
+    trilho.className = 'rail' + (estavaVisivel ? ' show' : '');
+    trilho.setAttribute('aria-label', 'Índice da página');
+    var linha = document.createElement('div');
+    linha.className = 'rl';
+    linha.style.height = (secoes.length - 1) * GAP + 'px';
+    preenchida = document.createElement('div');
+    preenchida.className = 'rf';
+    ponta = document.createElement('div');
+    ponta.className = 'tip';
+    trilho.appendChild(linha);
+    trilho.appendChild(preenchida);
+    trilho.appendChild(ponta);
+
+    pontos = secoes.map(function (s, k) {
+      var a = document.createElement('a');
+      a.className = 'rn';
+      a.href = '#' + s.id;
+      a.style.top = k * GAP + 'px';
+      a.innerHTML = '<i></i><span class="nm"></span>';
+      a.lastChild.textContent = s.getAttribute('data-sec');
+      a.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        window.scrollTo({
+          top: alvoDaRolagem(s),
+          behavior: window.matchMedia(MOVIMENTO_REDUZIDO).matches ? 'auto' : 'smooth'
+        });
+      });
+      trilho.appendChild(a);
+      return a;
+    });
+    document.body.appendChild(trilho);
+    atualizar();
+  }
 
   function atualizar() {
+    if (!trilho) return;
     var rolagem = window.pageYOffset;
     var y = rolagem + window.innerHeight * 0.45;
     var noFim = rolagem + window.innerHeight >= raiz.scrollHeight - 4;
@@ -184,5 +263,6 @@ if (typeof module !== 'undefined') module.exports = { calcularTrilho, trilhoVisi
   }
   window.addEventListener('scroll', agendar, { passive: true });
   window.addEventListener('resize', agendar);
-  atualizar();
+  montarTrilho();
+  if (irParaAncora) irParaAncora.scrollIntoView();
 })();

@@ -10,7 +10,7 @@ pequeno, sem framework, sem build e sem dependências.
 | Seção | Conteúdo |
 |---|---|
 | Início | Quem sou, em uma frase, e o caminho para os projetos |
-| Projetos | Seis cartões, cada um com o que o projeto faz, o que eu fiz, a stack e, quando há número, como ele foi medido |
+| Projetos | Sete cartões em duas páginas de até seis, com um botão para passar e voltar; cada cartão diz o que o projeto faz, o que eu fiz, a stack e, quando há número, como ele foi medido |
 | Sobre | Foto, o que construo e as tecnologias, por área |
 | Contato | E-mail, LinkedIn, GitHub e o currículo em PDF |
 
@@ -19,6 +19,7 @@ Projetos com código público têm link direto:
 | Projeto | O que é | Código |
 |---|---|---|
 | Analista de pedidos com IA | Agente que chama ferramentas para consultar o esquema e executar SQL de leitura; mostra a consulta e a resposta, com painel no ar e vídeo | [analista-pedidos-ia](https://github.com/EnzoFrazao/analista-pedidos-ia) |
+| Agenda Inteligente | Workflow n8n que lê o cartaz de um evento recebido por e-mail, valida com regras em código, avisa de choque de horário e cria o evento na agenda; com vídeo | [agenda-inteligente-n8n](https://github.com/EnzoFrazao/agenda-inteligente-n8n) |
 | Triagem de e-mails com LLM | Workflow n8n que classifica e roteia e-mails de atendimento | [triagem-emails-n8n-ia](https://github.com/EnzoFrazao/triagem-emails-n8n-ia) |
 | GUARÁ · KaizenDO Vale | Protótipo de localização de equipes num pátio ferroviário | [KaizenDo](https://github.com/EnzoFrazao/KaizenDo) |
 
@@ -31,6 +32,7 @@ Agiliza Transparência, Ouvidoria do MP/MA e SafeWork têm código fechado e apa
 - **Estática e leve.** Sem framework, sem analytics, sem recurso externo: a fonte (Space Grotesk) é servida daqui, e o
   site inteiro fica abaixo de 1 MB.
 - **O conteúdo vem primeiro.** Sem JavaScript, ou com `prefers-reduced-motion`, tudo aparece e nada se move.
+- **Projetos em páginas.** Cada página tem no máximo seis cartões e a mesma estrutura; um botão `‹ 01 / 02 ›` abaixo do título passa e volta. Sem JavaScript, todas as páginas aparecem, uma sob a outra.
 - **Movimento com função.** Cartões e seções entram suavemente sempre que aparecem na tela, não só na primeira vez. Os
   projetos ficam em duas colunas em zigue-zague, empilhadas sem vãos (o JS calcula a posição; sem ele vale uma grade
   comum), e um trilho lateral mostra onde você está na página.
@@ -44,7 +46,7 @@ Agiliza Transparência, Ouvidoria do MP/MA e SafeWork têm código fechado e apa
 |---|---|
 | `index.html` | Marcação, textos e as ilustrações SVG de cada cartão |
 | `style.css` | Cores, layout, animações e regras para impressão e movimento reduzido |
-| `site.js` | Revelar ao rolar, colunas dos projetos e trilho de rolagem; as contas são funções puras, testadas em Node |
+| `site.js` | Revelar ao rolar, páginas e colunas dos projetos e trilho de rolagem; as contas são funções puras, testadas em Node |
 | `fonts/` | Space Grotesk e a licença da fonte |
 | `Enzo-Frazao-Curriculo.pdf` | Currículo (1 página), baixado pelo botão em Contato |
 

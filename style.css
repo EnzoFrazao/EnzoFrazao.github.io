@@ -48,13 +48,26 @@ p.sub{color:var(--dim);font-size:16px;line-height:1.65;margin:0 auto 26px;max-wi
 .b-sobre .sec{padding-top:80px;padding-bottom:80px}
 .b-contato .sec{padding-top:72px;padding-bottom:72px}
 #projetos .sn{text-align:center}
-.sec h2.t{font-size:32px;margin:0 0 6px;text-align:center;letter-spacing:-.01em}
-.sec p.t{color:var(--faint);text-align:center;margin:0 0 54px;font-size:15px}
+.sec h2.t{font-size:32px;margin:0 0 28px;text-align:center;letter-spacing:-.01em}
+
+/* páginas de projetos: o botão só aparece com JS (site.js tira o hidden); sem JS as páginas ficam todas à vista, uma sob a outra */
+.pager{display:flex;align-items:center;justify-content:center;gap:6px;width:max-content;margin:0 auto 44px;padding:5px;background:var(--card);border:1px solid var(--line);border-radius:999px}
+.pager[hidden]{display:none}
+.pg-b{width:40px;height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:50%;background:var(--proj);color:var(--fg);cursor:pointer;transition:border-color .25s,color .25s,background .25s}
+.pg-b:hover:not([aria-disabled="true"]){border-color:var(--ac);color:var(--ac)}
+.pg-b:active:not([aria-disabled="true"]){background:var(--tint)}
+.pg-b[aria-disabled="true"]{opacity:.35;cursor:default}
+.pg-n{min-width:84px;text-align:center;font:500 13px var(--mono);letter-spacing:.06em;color:var(--dim)}
+.pg-n b{color:var(--fg);font-weight:500}
 
 footer{max-width:1080px;margin:0 auto;padding:40px 36px 56px;color:var(--faint);font-size:12.5px;text-align:center}
 
 /* projetos em zigue-zague: a coluna da direita começa mais abaixo */
 .grid{display:grid;grid-template-columns:1fr;column-gap:56px;row-gap:48px;align-items:start}
+.grid[hidden]{display:none}
+.grid + .grid{margin-top:48px}
+/* enquanto o site.js não escolheu a página, só a primeira aparece (se ele falhar, a classe js sai e todas voltam) */
+.js:not(.js-ok) .grid + .grid{display:none}
 @media (min-width:821px){
   .grid{grid-template-columns:1fr 1fr}
   .cell:nth-child(even){margin-top:72px}
@@ -70,6 +83,7 @@ footer{max-width:1080px;margin:0 auto;padding:40px 36px 56px;color:var(--faint);
 /* cores de cada projeto: tiradas do próprio projeto (ver specs/system.md) */
 .cell[data-cartao="analista"]{--c1:#fbbf24;--c2:#60a5fa;--b1:#16254a;--b2:#0d1426}
 .cell[data-cartao="triagem"]{--c1:#ff6d5a;--c2:#ffb4a8;--b1:#2e1a1c;--b2:#170f11}
+.cell[data-cartao="agenda"]{--c1:#a78bfa;--c2:#4ade80;--c3:#fbbf24;--b1:#17171b;--b2:#09090b}
 .cell[data-cartao="agiliza"]{--c1:#3b9aea;--c2:#34d399;--b1:#0b2850;--b2:#071a33}
 .cell[data-cartao="ouvidoria"]{--c1:#25d366;--c2:#2dd4bf;--b1:#0f2e26;--b2:#081a1c}
 .cell[data-cartao="kaizendo"]{--c1:#ecb11f;--c2:#34d399;--c3:#e0426b;--b1:#17171b;--b2:#09090b}
@@ -197,4 +211,6 @@ p.dif{color:var(--ac);font-size:13.5px;margin:20px 0 0}
   .js .card,.js .rv{opacity:1!important;transform:none!important;transition:none!important}
   .hero>*{animation:none}
   .rail{display:none}
+  .pager{display:none}
+  .grid[hidden]{display:grid}
 }
