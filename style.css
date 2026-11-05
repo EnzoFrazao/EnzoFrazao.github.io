@@ -3,7 +3,7 @@
 
 :root{
   --bg:#0d0e12; --card:#15171d; --line:#252833; --fg:#e4e6ec; --dim:#a5aab8; --faint:#8a90a0; --ac:#8b95f0;
-  --proj:#10121a; --surf:#181b27; --tint:#1c2040; --filete:rgba(139,149,240,.45); --nav-h:72px;
+  --proj:#10121a; --surf:#181b27; --tint:#1c2040; --filete:rgba(139,149,240,.45); --nav-h:76px;
   --sans:'Space Grotesk',system-ui,sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
@@ -33,7 +33,7 @@ p.sub{color:var(--dim);font-size:16px;line-height:1.65;margin:0 auto 26px;max-wi
 .btn.p:hover{border-color:var(--fg)}
 
 /* o hero ocupa a primeira tela inteira, descontado o menu */
-.hero{text-align:center;padding:44px 36px 64px;min-height:calc(100vh - var(--nav-h) - 110px);min-height:calc(100svh - var(--nav-h) - 110px);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
+.hero{text-align:center;padding:44px 36px 64px;min-height:calc(100vh - var(--nav-h));min-height:calc(100svh - var(--nav-h));position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
 
 /* faixas de fundo: cada seção tem o seu */
 .band{width:100%}
@@ -166,8 +166,8 @@ dl.stack dd{margin:0;color:var(--dim);font-size:14.5px;line-height:1.55}
 .hero>:nth-child(4){animation-delay:.24s}
 .hero>:nth-child(5){animation-delay:.32s}
 /* indicador de rolagem: decorativo, sem JS */
-.hero::after{content:"";position:absolute;bottom:26px;left:calc(50% - 5px);width:9px;height:9px;border-right:1.5px solid var(--faint);border-bottom:1.5px solid var(--faint);transform:rotate(45deg);opacity:.7;animation:cue 2.4s ease-in-out infinite}
-@keyframes cue{0%,100%{transform:translateY(0) rotate(45deg);opacity:.35}50%{transform:translateY(6px) rotate(45deg);opacity:.9}}
+.hero::after{content:"";position:absolute;bottom:34px;left:calc(50% - 8px);width:14px;height:14px;border-right:2px solid var(--dim);border-bottom:2px solid var(--dim);transform:rotate(45deg);opacity:.85;animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:translateY(0) rotate(45deg);opacity:.5}50%{transform:translateY(8px) rotate(45deg);opacity:1}}
 
 /* trilho: só depois do hero, só em tela larga */
 .rail{position:fixed;left:34px;top:96px;width:130px;z-index:5;opacity:0;visibility:hidden;transform:translateX(-10px);pointer-events:none;transition:opacity .45s,transform .45s,visibility 0s linear .45s}
